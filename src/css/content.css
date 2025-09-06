@@ -30,6 +30,7 @@
   --light-modal-background: rgba(255, 255, 255, 0.9);
   --light-color-primary: #d03718;
   --light-color-primary-hover: #ee5637;
+  --light-color-icon-filter: brightness(0.4);
 
   --color: var(--dark-color);
   --background-color: var(--dark-background-color);
@@ -54,6 +55,17 @@
     --modal-background: var(--light-modal-background);
     --color-primary: var(--light-color-primary);
     --color-primary-hover: var(--light-color-primary-hover);
+  }
+
+
+}
+
+@media (prefers-color-scheme: light){
+  .access_menu_toggle > img, .register_contents_title > img {
+    filter: var(--light-color-icon-filter);
+  }
+  .access_menu_nav.access_menu_nav {
+    background-color: var(--light-modal-background);
   }
 }
 

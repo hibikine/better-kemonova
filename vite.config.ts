@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
 import { crx, defineManifest } from '@crxjs/vite-plugin';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 const manifest = defineManifest({
   manifest_version: 3,
   name: 'Kemonova+ (ケモノバプラス)',
@@ -13,7 +13,7 @@ const manifest = defineManifest({
     '48': 'src/img/icon.png',
     '128': 'src/img/icon.png',
   },
-  author: 'hikage.works@gmail.com',
+  author: {"email": 'hikage.works@gmail.com'},
   options_page: 'src/options.html',
   action: {
     default_popup: 'src/popup.html',
@@ -34,5 +34,8 @@ const manifest = defineManifest({
 });
 export default defineConfig({
   // appType: 'custom',
+  build: {
+    sourcemap: true
+  },
   plugins: [react(), crx({ manifest })],
 });

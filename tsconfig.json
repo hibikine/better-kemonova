@@ -1,11 +1,19 @@
 {
-  "compilerOptions": {
-    "typeRoots": ["src/types", "node_modules/@types"],
-    "lib": ["ESNext", "dom"],
-    "strict": true,
-    "jsx": "react",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
-  }
+    "compilerOptions": {
+        "sourceMap": true,
+        "typeRoots": [
+            "src/types",
+            "node_modules/@types"
+        ],
+        "lib": [
+            "ESNext",
+            "dom"
+        ],
+        "strict": true,
+        "jsx": "react",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+    }
 }

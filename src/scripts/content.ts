@@ -3,16 +3,22 @@ import defaultImage from '../img/default.png';
 import { processRequest } from '../twipla-filler/src/addTwiplaListener';
 
 new MutationObserver(() => {
+  console.log('test')
   const eventUrlElement =
     document.querySelector<HTMLInputElement>('.event_url');
-  if (eventUrlElement == null) return;
+  if (eventUrlElement == null) {
+    console.log("event url element not found.")
+    return;
+  }
   const EVENT_CALLBACK_ATTRIBUTE = 'data-kemonova-plus-url-listener';
   if (eventUrlElement.getAttribute(EVENT_CALLBACK_ATTRIBUTE)) {
     return;
   }
   eventUrlElement.setAttribute(EVENT_CALLBACK_ATTRIBUTE, 'true');
+  console.log("add eventlistener");
   eventUrlElement.addEventListener('blur', async (e) => {
     const value = (e.target as HTMLInputElement).value;
+    console.log("send message");
     const response = await chrome.runtime.sendMessage({
       type: 'fetchTwipla',
       url: value,
@@ -123,6 +129,12 @@ const hotText = ['New Arrival', '新着情報'];
 const hotItem = document.querySelector<HTMLDivElement>('.hot');
 if (hotItem && hotItem.innerText === hotText[0]) {
   hotItem.innerText = hotText[1];
+}
+
+// Translate ログイン / 登録
+const createAccountButton = document.querySelector<HTMLSpanElement>('[data-type="create_account"]');
+if (createAccountButton && createAccountButton.innerText === "Account Login / Create") {
+  createAccountButton.innerText = "ログイン / 登録"
 }
 
 const dateText = new Map([
