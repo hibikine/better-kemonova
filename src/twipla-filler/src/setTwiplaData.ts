@@ -127,7 +127,7 @@ export const setTwiplaData =
 
       const accountUrl = $('.arrow_box + p > a').first().attr('href');
       if (accountUrl) {
-        const trimAccount = accountUrl.match(/[a-zA-Z_]+$/);
+        const trimAccount = accountUrl.match(/[a-zA-Z0-9_]+$/);
         if (trimAccount) {
           sendMessage(tab, 'accountUrl', trimAccount.at(0));
         }
