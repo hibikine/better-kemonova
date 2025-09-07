@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 const manifest = defineManifest({
   manifest_version: 3,
   name: 'Kemonova+ (ケモノバプラス)',
-  version: '0.0.1',
+  version: '0.0.2',
   // TODO: 将来的に英語対応する？
   // default_locale: "ja",
   description: 'ケモノ情報サイト Kemonova をもっと使いやすくする拡張機能です。',
@@ -13,7 +13,7 @@ const manifest = defineManifest({
     '48': 'src/img/icon.png',
     '128': 'src/img/icon.png',
   },
-  author: {"email": 'hikage.works@gmail.com'},
+  author: { email: 'hikage.works@gmail.com' },
   options_page: 'src/options.html',
   action: {
     default_popup: 'src/popup.html',
@@ -35,7 +35,7 @@ const manifest = defineManifest({
 export default defineConfig({
   // appType: 'custom',
   build: {
-    sourcemap: true
+    sourcemap: true,
   },
   plugins: [react(), crx({ manifest })],
 });
