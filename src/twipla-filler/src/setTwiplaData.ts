@@ -69,17 +69,7 @@ export const setTimeDate = <T extends dayjs.Dayjs | [dayjs.Dayjs, dayjs.Dayjs]>(
 export const schema = z.object({
   url: twiplaUrl,
 });
-/*const sendMessage = (
-  tab: chrome.tabs.Tab,
-  type: (typeof requestTypes)[number],
-  value: any
-) => {
-  const titleMessage: MessageRequest = { type, value };
-  if (typeof tab.id !== 'number') {
-    return;
-  }
-  chrome.tabs.sendMessage(tab.id, titleMessage);
-};*/
+
 export const setTwiplaData =
   (tab: null) =>
   async ({ url }: { url: string }): Promise<MessageRequest[]> => {
