@@ -1,10 +1,10 @@
+import { CheerioAPI, load } from 'cheerio';
 import dayjs from 'dayjs';
-import { any, z } from 'zod';
-import { twiplaUrl } from './schemas';
+import { z } from 'zod';
+import { getScheduleText, getTimeText, isArray } from './getScheduleText';
 import { MessageRequest } from './messageRequest';
 import requestTypes from './requestTypes';
-import { load } from 'cheerio';
-import { getScheduleText, getTimeText, isArray } from './getScheduleText';
+import { twiplaUrl } from './schemas';
 
 const nullOrWrap = <T extends unknown>(value: T | null): [T] | null =>
   value ? [value] : null;
@@ -121,58 +121,12 @@ export const setTwiplaData =
       const $ = await fetchTwipla(url);
       console.log($('h1').contents().text());
 
-      const title = $('h1')
-        .contents()
-        .filter(function () {
-          return this.type === 'text';
-        })
-        .text();
+      const title = getTitle($);
       if (title !== '') {
         sendMessage(tab, 'title', title);
       }
 
-      const headerTimeText = $('.arrow_box .largetext').text();
-      const headerTime = getScheduleText(headerTimeText) as dayjs.Dayjs | null;
-      const desc = $('.desc').text().split('\n');
-      const times = desc.flatMap(
-        (text): Exclude<ReturnType<typeof getScheduleText>, null>[] => {
-          const date = getScheduleText(text);
-          const time = getTimeText(text);
-          if (time !== null) {
-          }
-          if (date === null && time === null) {
-            return [];
-          }
-          if (headerTime === null) {
-            if (
-              time !== null &&
-              date !== null &&
-              isArray(time) &&
-              !isArray(date)
-            ) {
-              return [setTimeDate(time, date)];
-            }
-            return firstNotNull(date, time);
-          }
-          if (date !== null) {
-            if (isArray(date)) {
-              if (headerTime.isSame(date[0], 'day')) {
-                return [date];
-              }
-            } else if (headerTime.isSame(date, 'day')) {
-              if (time !== null && isArray(time)) {
-                return [setTimeDate(time, date)];
-              }
-              return [date];
-            }
-          }
-          if (time !== null) {
-            return [setTimeDate(time, headerTime)];
-          }
-          return [];
-        }
-      );
-      const time = getMergedTimes(times);
+      const [time, headerTime] = getTime($);
       if (time !== undefined) {
         sendTime(tab, time);
       } else if (headerTime !== null) {
@@ -191,3 +145,58 @@ export const setTwiplaData =
     }
     return resultData;
   };
+
+function getTitle($: CheerioAPI): string {
+  return $('h1')
+    .contents()
+    .filter(function () {
+      return this.type === 'text';
+    })
+    .text();
+}
+
+function getTime(
+  $: CheerioAPI
+): [
+  time: dayjs.Dayjs | [dayjs.Dayjs, dayjs.Dayjs] | undefined,
+  headerTime: dayjs.Dayjs | null
+] {
+  const headerTimeText = $('.arrow_box .largetext').text();
+  const headerTime = getScheduleText(headerTimeText) as dayjs.Dayjs | null;
+  const desc = $('.desc').text().split('\n');
+  const times = desc.flatMap(
+    (text): Exclude<ReturnType<typeof getScheduleText>, null>[] => {
+      const date = getScheduleText(text);
+      const time = getTimeText(text);
+      if (time !== null) {
+      }
+      if (date === null && time === null) {
+        return [];
+      }
+      if (headerTime === null) {
+        if (time !== null && date !== null && isArray(time) && !isArray(date)) {
+          return [setTimeDate(time, date)];
+        }
+        return firstNotNull(date, time);
+      }
+      if (date !== null) {
+        if (isArray(date)) {
+          if (headerTime.isSame(date[0], 'day')) {
+            return [date];
+          }
+        } else if (headerTime.isSame(date, 'day')) {
+          if (time !== null && isArray(time)) {
+            return [setTimeDate(time, date)];
+          }
+          return [date];
+        }
+      }
+      if (time !== null) {
+        return [setTimeDate(time, headerTime)];
+      }
+      return [];
+    }
+  );
+  const time = getMergedTimes(times);
+  return [time, headerTime];
+}
